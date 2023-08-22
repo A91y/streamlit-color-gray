@@ -4,6 +4,7 @@ import numpy as np
 import streamlit as st
 from pathlib import Path
 from streamlit_image_comparison import image_comparison
+from streamlit_js_eval import streamlit_js_eval
 
 current_dir = Path(__file__).parent if "__file__" in locals() else Path.cwd()
 css_file = current_dir / "styles" / "main.css"
@@ -14,6 +15,13 @@ st.set_page_config(page_title="AyDecoloriser", layout="centered")
 with open(css_file) as f:
     st.markdown("<style>{}</style>".format(f.read()), unsafe_allow_html=True)
 
+screenwidth = streamlit_js_eval(js_expressions='screen.width', key = 'SCR')
+# print(screenwidth/704)
+
+y = (190/147) *screenwidth - (39687/49)
+ 
+st.markdown("<style> {} </style>".format("@media screen and (max-width: 704px) {iframe { scale: %f; }}" % (screenwidth/704)), unsafe_allow_html=True)
+st.markdown("<style> {} </style>".format("@media screen and (max-width: 704px) {iframe { transform: translateX(%fpx) !important; }}" % (y)), unsafe_allow_html=True)
 
 st.markdown("# Decoloriser")
 st.markdown("##### by Ayush")
