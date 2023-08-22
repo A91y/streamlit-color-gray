@@ -15,14 +15,6 @@ st.set_page_config(page_title="AyDecoloriser", layout="centered")
 with open(css_file) as f:
     st.markdown("<style>{}</style>".format(f.read()), unsafe_allow_html=True)
 
-screenwidth = streamlit_js_eval(js_expressions='screen.width', key = 'SCR')
-# print(screenwidth/704)
-
-y = (190/147) *screenwidth - (39687/49)
- 
-st.markdown("<style> {} </style>".format("@media screen and (max-width: 704px) {iframe { scale: %f; }}" % (screenwidth/704)), unsafe_allow_html=True)
-st.markdown("<style> {} </style>".format("@media screen and (max-width: 704px) {iframe { transform: translateX(%fpx) !important; }}" % (y)), unsafe_allow_html=True)
-
 st.markdown("# Decoloriser")
 st.markdown("##### by Ayush")
 st.markdown("---")
@@ -48,7 +40,35 @@ if uploaded_file is not None:
         make_responsive=True,
         show_labels=True,
     )
-
+    try:
+        screenwidth = float(streamlit_js_eval(
+            js_expressions='screen.width', key='SCR'))
+    except:
+        screenwidth = streamlit_js_eval(
+            js_expressions='screen.width', key='SCA')
+    # print(screenwidth/704)
+    try:
+        y = (190/147) * (screenwidth) - (39687/49)
+    except Exception as e:
+        print(e)
+    try:
+        st.markdown("<style> {} </style>".format("@media screen and (max-width: 704px) {iframe { scale: %f; }}" %
+                    (screenwidth/704)), unsafe_allow_html=True)
+        st.markdown("<style> {} </style>".format(
+            "@media screen and (max-width: 704px) {iframe { transform: translateX(%fpx) !important; }}" % (y)), unsafe_allow_html=True)
+    except Exception as e:
+        print(e)
+    # expression = (
+    #     '''
+    #     <script>
+    #     var element = getElementsByTagName("iframe")[0];
+    #     element.scrollIntoView({behavior: "smooth"});
+    #     </script>
+    #     '''
+    # )
+    # st.components.v1.html(expression)
+    # expression = "window.scrollTo(0, document.body.scrollHeight);"
+    # streamlit_js_eval(js_expressions=expression, key='AYU')
     uploaded_file_name = uploaded_file.name
     grayimg_name = uploaded_file_name.replace(".", " ").split()
     extension = grayimg_name[-1]
@@ -65,4 +85,5 @@ if uploaded_file is not None:
             file_name=grayimg_name,
             mime=f"image/{extension}"
         )
+    file.close()
     os.remove(file_)
