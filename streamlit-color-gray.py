@@ -1,5 +1,6 @@
 import cv2
 import os
+import mimetypes
 import numpy as np
 import streamlit as st
 from pathlib import Path
@@ -77,13 +78,13 @@ if uploaded_file is not None:
     # file_ = "img/" + grayimg_name
     file_ = grayimg_name
     cv2.imwrite(file_, cv2.cvtColor(grayimg, cv2.COLOR_RGB2BGR))
-
+    mime = mimetypes.guess_type(file_)[0]
     with open(file_, "rb") as file:
         btn = st.download_button(
             label="Download Grayed image",
             data=file,
             file_name=grayimg_name,
-            mime=f"image/{extension}"
+            mime=mime
         )
     file.close()
     os.remove(file_)
